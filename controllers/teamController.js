@@ -25,7 +25,7 @@ exports.createTeam = async(req,res) =>{
 exports.getTeams = async(req,res) => {
     try {
         const team = await Team.find()
-        res.json({team})
+        res.json(team)
     } catch (error) {
         console.log(error)
         res.status(500).send('Hubo un error')
