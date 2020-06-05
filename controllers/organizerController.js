@@ -34,6 +34,7 @@ exports.createOrganizer = async(req,res) => {
         organizer = new Organizer()
         organizer.user = user._id
         organizer.name = name
+        console.log(organizer)
         await organizer.save()
         //Crear y firmar el JWT
         const payload = {
