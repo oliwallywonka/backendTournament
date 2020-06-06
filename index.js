@@ -1,4 +1,5 @@
 const express = require('express')
+const formData = require('express-form-data')
 const conectarDB = require('./config/database')
 const cors = require('cors')
 const app = express ()
@@ -9,6 +10,8 @@ conectarDB()
 app.use(cors())
 
 app.use(express.json({extended:true}))
+app.use(express.urlencoded({ extended: true }))
+app.use(formData.parse())
 
 const PORT = process.env.PORT || 4000 
 
