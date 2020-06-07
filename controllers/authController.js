@@ -32,18 +32,27 @@ exports.authUser = async (req,res) =>{
         organizer = await Organizer.findOne({user:id})
         referee = await Referee.findOne({user:id})
 
-        var rol
+        var rol = {}
         
         if(player){
-            rol = 'player'
+            rol = {
+                name:'player',
+                id: player._id
+            }
         }
 
         if(organizer){
-            rol = 'organizer'
+            rol = {
+                name:'organizer',
+                id: organizer._id
+            }
         }
 
         if(referee){
-            rol = 'referee'
+            rol = {
+                name:'referee',
+                id: referee._id
+            }
         }
 
         // Si todo es correcto creamos el JWT
@@ -51,7 +60,7 @@ exports.authUser = async (req,res) =>{
         var payload = {
              user:{
                  id: user.id,
-                 email: user.email,
+                 email: user.email, 
                  rol: rol
             } 
         }

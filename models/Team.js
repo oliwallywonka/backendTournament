@@ -2,6 +2,10 @@ const mongoose = require('mongoose')
 
 const TeamSchema = mongoose.Schema(
     {   
+        tournament:{
+            type: mongoose.Schema.Types.ObjectId,
+            ref :"Tournament"
+        },
         name:{
             type: String,
             required:true,
@@ -18,7 +22,14 @@ const TeamSchema = mongoose.Schema(
         created :{
             type: Date,
             default: Date.now()
-        }
+        },
+
+        players:[
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Player'
+            }
+        ]
     }
 )
 

@@ -58,7 +58,75 @@ exports.createPlayer = async(req,res) => {
         //return res.status(200).json({msg:'Usuario creado correctamente con el rol de Jugador'})
 
     } catch (error) {
-        console.log(error) 
         res.status(400).send('Hubo un error')
     }
 } 
+
+exports.createPlayerTeam = async (req,res) =>{
+    const errores = validationResult(req)
+    if (!errores.isEmpty()) {
+        return res.status(400).json({errores: errores.array()})
+    }
+    try {
+        const player = new Player(req.body)
+        await player.save()
+        res.json(player)
+    } catch (error) {
+        res.status(500).send('Hubo un error')
+    }
+} 
+
+exports.getPlayers = async(req,res) =>{
+    try {
+        const player = await Player.find({
+            team : req.params.id,
+            status:true
+        })
+        res.json(player)
+    } catch (error) {
+        res.status(500).send('Hubo un error')
+    }
+}
+
+exports.editPlayer = async(req,res) =>{
+    const errores = validationResult(req)
+    if (!errores.isEmpty()) {
+        return res.status(400).json({errores: errores.array()})
+    }
+    const {nick,age,team}=req.body
+    const newPlayer = {}
+    
+    if(nick) {newPlayer.nick = nick}
+    if(age) {newPlayer.age = age}
+    if(team) {newPlayer.team = team}
+
+    try {
+        let player = await Player.findById(req.params.id)
+        if(!player){
+            return res.status(404).json({msg:"Jugador no encontrado"})
+        }
+        player = await Player.findByIdAndUpdate(
+            {_id: req.params.id},
+            {$set: newPlayer},
+            {new:true}
+        )
+        res.json({player})
+    } catch (error) {
+        res.status(500).send('Hubo un error')
+    }
+}
+
+exports.deletePlayer = async(req,res)=>{
+    try {
+        let player = await Player.findById(req.params.id)
+        if(!player) return res.status(404).json({msg:'Jugador no encontrado'})
+
+        await Player.findByIdAndUpdate(
+            {_id:req.params.id},
+            {status:false}
+        )
+        res.json({msg:'Juagador eliminado '})
+    } catch (error) {
+        res.status(500).send('Error en el servidor')
+    }
+}

@@ -8,7 +8,7 @@ exports.createTournament = async(req,res) =>{
     if (!errores.isEmpty()) {
         return res.status(400).json({errores: errores.array()})
     }
-    if (req.rol !== 'organizer') {
+    if (req.rol.name !== 'organizer') {
         return res.status(400).json({errores:'No tiene permiso para realizar esta accion' })
     }
     try{
@@ -16,7 +16,7 @@ exports.createTournament = async(req,res) =>{
         const tournament = new Tournament()
         tournament.name = name
         tournament.banner = banner
-        tournament.organizer = req.user
+        tournament.organizer = req.rol.id
         await tournament.save()
 
         return res.status(200).json({msg:'Torneo creado correctamente'})
@@ -30,7 +30,10 @@ exports.createTournament = async(req,res) =>{
 
 exports.getTournaments = async(req,res) => {
     try {
-        const tournament =await Tournament.find().populate('organizer')
+        const tournament =await Tournament.find({
+            organizer:req.rol.id,
+            status:true 
+        }).populate('organizer')
         return res.send(tournament)
     } catch (error) {
         console.log(error)

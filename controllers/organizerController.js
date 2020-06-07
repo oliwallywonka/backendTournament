@@ -40,7 +40,10 @@ exports.createOrganizer = async(req,res) => {
         const payload = {
             user:{
                 id: user.id,
-                rol: 'organizer'
+                rol: {
+                    name: 'organizer',
+                    id: organizer._id
+                }
             } 
         }
 
@@ -58,7 +61,6 @@ exports.createOrganizer = async(req,res) => {
         //return res.status(200).json({msg:'Usuario creado correctamente con el rol de Organizador'})
 
     } catch (error) {
-        console.log(error) 
         res.status(400).send('Hubo un error')
     }
 } 
